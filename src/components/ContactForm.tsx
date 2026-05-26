@@ -1,16 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Mail, Send, Award, Database, CheckCircle, HelpCircle, Loader2 } from "lucide-react";
-
-interface MessagePayload {
-  id: string;
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  timestamp: string;
-}
+import { Mail, Send, Award, CheckCircle, Loader2 } from "lucide-react";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
@@ -20,7 +11,6 @@ export default function ContactForm() {
   
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [savedMessages, setSavedMessages] = useState<MessagePayload[]>([]);
   const [visitorCount, setVisitorCount] = useState<number>(318);
 
   // Load message logs from localStorage on mount and increment visitor count
@@ -37,12 +27,6 @@ export default function ContactForm() {
       sessionStorage.setItem("portfolio_session_visited", "true");
     }
     setVisitorCount(currentCount);
-
-    // Stored messages
-    const storedMsgs = localStorage.getItem("portfolio_contact_messages");
-    if (storedMsgs) {
-      setSavedMessages(JSON.parse(storedMsgs));
-    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,20 +54,6 @@ export default function ContactForm() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Log locally to keep the visual database console updating
-        const newPayload: MessagePayload = {
-          id: `MSG-${Math.floor(Math.random() * 90000 + 10000)}`,
-          name,
-          email,
-          subject: subject || "No Subject Provided",
-          message,
-          timestamp: new Date().toLocaleString(),
-        };
-
-        const updatedLogs = [newPayload, ...savedMessages];
-        setSavedMessages(updatedLogs);
-        localStorage.setItem("portfolio_contact_messages", JSON.stringify(updatedLogs));
-
         setSuccess(true);
         
         // Clear inputs
@@ -132,14 +102,14 @@ export default function ContactForm() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Contact Form */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <div className="lg:col-span-8 flex flex-col gap-4">
           
           {success && (
             <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 p-4 rounded-xl text-xs font-mono flex items-start gap-2.5 animate-fadeIn">
               <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold block text-slate-200 mb-0.5">Payload Transmitted Successfully!</span>
-                Message written locally (stored in localStorage payload pool). Check the "Message Logs" console on the right!
+                Your message has been securely sent. I will review your operational dispatch shortly.
               </div>
             </div>
           )}
@@ -194,7 +164,7 @@ export default function ContactForm() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Describe your project, team opportunity, or engineering problem..."
-                className="bg-slate-950/80 border border-slate-800 focus:border-indigo-500 text-xs px-3.5 py-2.5 rounded-xl text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 resize-none"
+                className="bg-slate-950/80 border border-slate-800 focus:border-indigo-500 text-xs px-3.5 py-2.5 rounded-xl text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 resize-none animate-none"
               />
             </div>
 
@@ -218,49 +188,21 @@ export default function ContactForm() {
           </form>
         </div>
 
-        {/* Console / Supabase Hookup guide */}
-        <div className="lg:col-span-5 flex flex-col gap-4">
-          
-          {/* Telemetry Message Logs */}
-          <div className="bg-slate-950 border border-slate-900 rounded-xl p-4 flex flex-col h-[200px] justify-between">
-            <span className="text-[10px] font-mono text-indigo-400 flex items-center gap-1 border-b border-slate-900 pb-2">
-              <Database className="w-3.5 h-3.5 text-indigo-400" />
-              Local Database Logs (localStorage payload)
-            </span>
-
-            <div className="flex-1 overflow-y-auto font-mono text-[9px] text-slate-300 leading-normal py-2 space-y-2.5 scrollbar-thin">
-              {savedMessages.length === 0 ? (
-                <div className="text-slate-500 italic py-6 text-center">
-                  Standby. No messages stored in session. Send a message on the left to see telemetry database writing live!
-                </div>
-              ) : (
-                savedMessages.map((msg) => (
-                  <div key={msg.id} className="bg-[#0b0e17] p-2 rounded border border-slate-900">
-                    <div className="flex justify-between text-indigo-300 mb-0.5">
-                      <span>{msg.id} ({msg.name})</span>
-                      <span>{msg.timestamp}</span>
-                    </div>
-                    <div className="text-slate-400 text-[8px] truncate">Email: {msg.email}</div>
-                    <div className="text-slate-400 text-[8px] truncate">Subj: {msg.subject}</div>
-                    <p className="text-slate-200 mt-1 text-[8.5px] whitespace-pre-wrap">{msg.message}</p>
-                  </div>
-                ))
-              )}
+        {/* Clean Architecture & Git Repositories Card */}
+        <div className="lg:col-span-4 flex flex-col gap-4">
+          <div className="bg-[#0b0e17]/80 border border-slate-800 rounded-xl p-5 flex flex-col gap-3 h-full justify-between">
+            <div className="flex flex-col gap-3">
+              <span className="text-[10px] font-mono text-teal-400 flex items-center gap-1.5 uppercase font-bold tracking-wider">
+                <Award className="w-4 h-4 text-teal-400" />
+                Clean Code & Repository Access
+              </span>
+              <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                I believe in modular design, robust error handling, and clean documentation. The repository for this entire portfolio and all automation pipelines is fully open source.
+              </p>
             </div>
-          </div>
-
-          {/* Clean Architecture & Git Repositories Card */}
-          <div className="bg-[#0b0e17]/80 border border-slate-800 rounded-xl p-5 flex flex-col gap-3">
-            <span className="text-[10px] font-mono text-teal-400 flex items-center gap-1.5 uppercase font-bold tracking-wider">
-              <Award className="w-4 h-4 text-teal-400" />
-              Clean Code & Repository Access
-            </span>
-            <p className="text-xs text-slate-300 leading-relaxed font-sans">
-              I believe in modular design, robust error handling, and clean documentation. The repository for this entire portfolio and all automation pipelines is fully open source.
-            </p>
-            <div className="flex flex-col gap-2 mt-1">
+            <div className="flex flex-col gap-2 mt-4">
               <a
-                href="https://github.com"
+                href="https://github.com/AnthonioBarry"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full text-center px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-100 font-bold text-xs rounded-xl transition duration-200 cursor-pointer flex items-center justify-center gap-2 group active:scale-98"
@@ -273,8 +215,8 @@ export default function ContactForm() {
               </a>
             </div>
           </div>
-
         </div>
+
       </div>
 
     </div>
