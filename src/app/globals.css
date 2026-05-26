@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #060913;
+  --foreground: #f8fafc;
+  --accent-teal: #2dd4bf;
+  --accent-cyan: #22d3ee;
+  --accent-indigo: #818cf8;
+  --accent-emerald: #34d399;
 }
 
 @theme inline {
@@ -12,15 +16,105 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0e1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+  border: 2px solid #0a0e1a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(45, 212, 191, 0.2);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7),
+              0 0 20px -5px rgba(45, 212, 191, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Interactive Glowing Accents */
+.glow-teal {
+  box-shadow: 0 0 30px -5px rgba(45, 212, 191, 0.25);
+}
+.glow-indigo {
+  box-shadow: 0 0 30px -5px rgba(129, 140, 248, 0.25);
+}
+
+/* Background Cyber Grid */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+}
+
+/* Animations */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes grid-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+.animate-grid-move {
+  animation: grid-move 20s linear infinite;
+}
+
+/* Print Optimization for CV */
+@media print {
+  @page {
+    margin: 0; /* Hides default browser header (URL) and footer (date/page number) */
+  }
+  body {
+    background: white !important;
+    color: black !important;
+    margin: 2cm !important; /* Restore normal page margins for content */
+  }
+  .no-print, button, input, textarea, select, .print-hidden {
+    display: none !important;
+  }
+  .glass-panel {
+    background: transparent !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  .print-page-break {
+    page-break-before: always;
+  }
 }
