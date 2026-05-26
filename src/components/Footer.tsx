@@ -28,7 +28,7 @@ export default function Footer() {
         {/* Right Social Connectors */}
         <div className="flex items-center gap-4">
           <a
-            href="https://github.com"
+            href="https://github.com/AnthonioBarry"
             target="_blank"
             rel="noopener noreferrer"
             className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-100 transition-all duration-200"
@@ -40,7 +40,7 @@ export default function Footer() {
             </svg>
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/anthoniobarry"
             target="_blank"
             rel="noopener noreferrer"
             className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-100 transition-all duration-200"
