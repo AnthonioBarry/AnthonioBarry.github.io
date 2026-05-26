@@ -45,40 +45,64 @@ export default function ContactForm() {
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) return;
 
     setLoading(true);
 
-    // Mock API processing delay
-    setTimeout(() => {
-      const newPayload: MessagePayload = {
-        id: `MSG-${Math.floor(Math.random() * 90000 + 10000)}`,
-        name,
-        email,
-        subject: subject || "No Subject Provided",
-        message,
-        timestamp: new Date().toLocaleString(),
-      };
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "299ed44e-fc12-4c07-ab0b-394f480dd4c2",
+          name,
+          email,
+          subject: subject || "Portfolio Operational Message",
+          message,
+        }),
+      });
 
-      const updatedLogs = [newPayload, ...savedMessages];
-      setSavedMessages(updatedLogs);
-      localStorage.setItem("portfolio_contact_messages", JSON.stringify(updatedLogs));
+      const data = await response.json();
 
+      if (response.ok && data.success) {
+        // Log locally to keep the visual database console updating
+        const newPayload: MessagePayload = {
+          id: `MSG-${Math.floor(Math.random() * 90000 + 10000)}`,
+          name,
+          email,
+          subject: subject || "No Subject Provided",
+          message,
+          timestamp: new Date().toLocaleString(),
+        };
+
+        const updatedLogs = [newPayload, ...savedMessages];
+        setSavedMessages(updatedLogs);
+        localStorage.setItem("portfolio_contact_messages", JSON.stringify(updatedLogs));
+
+        setSuccess(true);
+        
+        // Clear inputs
+        setName("");
+        setEmail("");
+        setSubject("");
+        setMessage("");
+
+        setTimeout(() => {
+          setSuccess(false);
+        }, 5000);
+      } else {
+        alert("Transmission failed: " + (data.message || "Unknown Web3Forms API error."));
+      }
+    } catch (error) {
+      alert("Failed to connect to transmission pipeline. Please check your internet connection.");
+    } finally {
       setLoading(false);
-      setSuccess(true);
-      
-      // Clear inputs
-      setName("");
-      setEmail("");
-      setSubject("");
-      setMessage("");
-
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
-    }, 1200);
+    }
   };
 
   return (
