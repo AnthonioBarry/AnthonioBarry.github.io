@@ -53,7 +53,7 @@ export default function Footer() {
             </svg>
           </a>
           <a
-            href="mailto:contact@domain.com"
+            href="mailto:niobarr@gmail.com"
             className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-100 transition-all duration-200"
             title="Send Email"
           >
